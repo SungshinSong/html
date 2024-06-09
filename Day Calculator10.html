@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D-day Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87CEEB; /* 하늘색 배경 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .calculator {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            width: 300px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 2px solid #87CEEB;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #87CEEB;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #569DC7;
+        }
+        h1, h2, h3 {
+            color: #333;
+            text-align: center;
+        }
+        #resultDate, #weekendCount {
+            font-size: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>D-day Calculator</h1>
+        <label for="baseDate">기준 날짜:</label>
+        <input type="date" id="baseDate">
+        
+        <label for="days">일수:</label>
+        <input type="text" id="days" placeholder="예: +100 또는 -100">
+        
+        <button onclick="calculateResult()">계산하기</button>
+        
+        <h2>결과 날짜 및 요일:</h2>
+        <p id="resultDate"></p>
+        
+        <h3>기준일 부터 D-Day 까지의 주말 수:</h3>
+        <p id="weekendCount"></p>
+    </div>
+    
+    <script>
+        function calculateResult() {
+            const baseDate = document.getElementById('baseDate').value;
+            const days = parseInt(document.getElementById('days').value);
+            
+            const startDate = new Date(baseDate);
+            const endDate = new Date(baseDate);
+            endDate.setDate(endDate.getDate() + days);
+            
+            const weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+            const resultDayOfWeek = weekdays[endDate.getDay()];
+            
+            document.getElementById('resultDate').textContent = endDate.toISOString().split('T')[0] + ' (' + resultDayOfWeek + ')';
+
+            // 주말 수 계산
+            let weekendCount = { saturdays: 0, sundays: 0 };
+            for (let dt = new Date(startDate); dt <= endDate; dt.setDate(dt.getDate() + 1)) {
+                if (dt.getDay() === 6) { // 토요일
+                    weekendCount.saturdays++;
+                }
+                if (dt.getDay() === 0) { // 일요일
+                    weekendCount.sundays++;
+                }
+            }
+            document.getElementById('weekendCount').textContent = `토요일: ${weekendCount.saturdays}일, 일요일: ${weekendCount.sundays}일`;
+        }
+    </script>
+</body>
+</html>
